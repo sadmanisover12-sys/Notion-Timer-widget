@@ -10,7 +10,7 @@
 
 <style>
 :root {
-  --bg: #fafafa;
+  --bg: transparent;
   --fg: #1a1a1a;
 
   --card-bg: #ffffff;
@@ -25,10 +25,10 @@
 }
 
 body.dark {
-  --bg: #121212;
-  --fg: #ffffff;
-
-  --card-bg: #1a1a1a;
+  --bg: transparent; /* keep the page background transparent */
+  --fg: #ffffff;      /* text color inside the card */
+  
+  --card-bg: #1a1a1a; /* dark card */
   --card-shadow: 0 1px 5px rgba(0,0,0,.6);
 
   --btn-bg: #1e1e1e;
@@ -38,6 +38,7 @@ body.dark {
   --input-border: rgba(255,255,255,.25);
   --input-focus: rgba(255,255,255,.7);
 }
+
 
 html, body {
   margin: 0;
@@ -50,12 +51,14 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: var(--bg);
+  background: transparent; /* no background */
   color: var(--fg);
   font-family: "JetBrains Mono", monospace;
-  font-weight: 400;
-  transition: background .25s, color .25s;
+  height: auto; /* only takes space needed */
+  margin: 0;
+  padding: 0;
 }
+
 
 .timer-container {
   width: 100%;
