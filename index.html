@@ -163,20 +163,23 @@ button:active {
 
 /* dark-mode toggle */
 .theme-toggle {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-
-  background: transparent;
-  box-shadow: none;
-  font-size: 1.35rem;
-
-  padding: 6px;
-  cursor: pointer;
-  opacity: .7;
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 4px 12px;
+    font-size: 0.9rem;
+    background: var(--btn-bg);
+    color: var(--btn-fg);
+    border-radius: 999px; /* capsule shape */
+    box-shadow: var(--btn-shadow);
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, opacity 0.2s;
 }
 .theme-toggle:hover {
-  opacity: 1;
+    opacity: 0.85;
+}
+  
 }
 </style>
 
