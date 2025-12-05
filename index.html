@@ -1,308 +1,298 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Timer</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-        body {
-            font-family: 'JetBrains Mono', monospace;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: #ffffff;
-            color: #1a1a1a;
-            transition: background 0.3s, color 0.3s;
-        }
+<title>Timer</title>
 
-        body.dark {
-            background: #1a1a1a;
-            color: #ffffff;
-        }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 
-        .timer-container {
-            text-align: center;
-            padding: 3rem;
-            background: rgba(0, 0, 0, 0.03);
-            border-radius: 1.5rem;
-            max-width: 400px;
-        }
+<style>
+:root {
+  --bg: #fafafa;
+  --fg: #1a1a1a;
 
-        body.dark .timer-container {
-            background: rgba(255, 255, 255, 0.05);
-        }
+  --card-bg: #ffffff;
+  --card-shadow: 0 1px 3px rgba(0,0,0,.15);
 
-        .display {
-            font-size: 4.5rem;
-            margin-bottom: 2.5rem;
-            letter-spacing: 0.1em;
-        }
+  --btn-bg: #ffffff;
+  --btn-fg: #1a1a1a;
+  --btn-shadow: 0 1px 2px rgba(0,0,0,.18);
 
-        .controls {
-            display: flex;
-            gap: 0.75rem;
-            justify-content: center;
-            margin-top: 2rem;
-        }
+  --input-border: rgba(0,0,0,.3);
+  --input-focus: rgba(0,0,0,.7);
+}
 
-        .play-pause-btn {
-            min-width: 120px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            line-height: 1;
-        }
+body.dark {
+  --bg: #121212;
+  --fg: #ffffff;
 
-        .play-pause-btn.paused {
-            padding-top: 0.6rem;
-            padding-bottom: 0.9rem;
-        }
+  --card-bg: #1a1a1a;
+  --card-shadow: 0 1px 5px rgba(0,0,0,.6);
 
-        .input-group {
-            display: flex;
-            gap: 0.75rem;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
+  --btn-bg: #1e1e1e;
+  --btn-fg: #ffffff;
+  --btn-shadow: 0 1px 5px rgba(0,0,0,.8);
 
-        input {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-            padding: 0.75rem;
-            width: 4rem;
-            text-align: center;
-            background: transparent;
-            color: inherit;
-            border: 2px solid #1a1a1a;
-            border-radius: 0.5rem;
-            transition: border-color 0.3s;
-        }
+  --input-border: rgba(255,255,255,.25);
+  --input-focus: rgba(255,255,255,.7);
+}
 
-        /* Remove number input arrows */
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
+/* base */
+body {
+  margin: 0;
+  padding: 24px;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Roboto", sans-serif;
 
-        input[type=number] {
-            -moz-appearance: textfield;
-        }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 
-        body.dark input {
-            border-color: #ffffff;
-        }
+  transition: background .25s, color .25s;
+}
 
-        input:focus {
-            outline: none;
-            opacity: 0.8;
-        }
+.timer-container {
+  width: 100%;
+  max-width: 360px;
+  padding: 20px 20px 28px;
+  border-radius: 20px;
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
+  transition: background .25s, box-shadow .25s;
+  text-align: center;
+}
 
-        .input-label {
-            font-size: 0.8rem;
-        }
+/* time */
+.display {
+  font-size: 3.2rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 20px;
+}
 
-        button {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-            padding: 0.75rem 1.5rem;
-            background: #1a1a1a;
-            color: #ffffff;
-            border: none;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            transition: opacity 0.2s, background 0.3s, color 0.3s;
-        }
+/* input row */
+.input-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: .6rem;
+  margin-bottom: 14px;
+}
 
-        body.dark button {
-            background: #ffffff;
-            color: #1a1a1a;
-        }
+input {
+  width: 3.2rem;
+  padding: 8px;
+  background: transparent;
+  color: var(--fg);
 
-        body.dark .theme-toggle {
-            background: transparent;
-        }
+  font-size: .9rem;
+  text-align: center;
 
-        button:hover {
-            opacity: 0.8;
-        }
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
 
-        button:active {
-            opacity: 0.6;
-        }
+  transition: border-color .2s, background .2s, color .2s;
+  outline: none;
+}
 
-        .theme-toggle {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            padding: 0.5rem;
-            font-size: 1.5rem;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            filter: grayscale(1);
-        }
+/* remove arrows */
+input::-webkit-inner-spin-button,
+input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
 
-        .theme-toggle:hover {
-            opacity: 0.7;
-        }
+input:focus {
+  border-color: var(--input-focus);
+}
 
-        .presets {
-            display: flex;
-            gap: 0.5rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
+.input-label {
+  font-size: .75rem;
+  opacity: .7;
+}
 
-        .preset-btn {
-            font-size: 0.8rem;
-            padding: 0.5rem 1rem;
-            background: transparent;
-            color: #1a1a1a;
-            border: 1px solid #1a1a1a;
-        }
+/* buttons */
+button {
+  font-family: inherit;
+  font-size: .85rem;
+  padding: 8px 14px;
 
-        body.dark .preset-btn {
-            color: #ffffff;
-            border-color: #ffffff;
-        }
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
 
-        .preset-btn:hover {
-            background: #1a1a1a;
-            color: #ffffff;
-        }
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  box-shadow: var(--btn-shadow);
 
-        body.dark .preset-btn:hover {
-            background: #ffffff;
-            color: #1a1a1a;
-        }
-    </style>
+  transition: background .2s, color .2s, opacity .15s;
+}
+
+button:hover {
+  opacity: .8;
+}
+button:active {
+  opacity: .6;
+}
+
+/* play/pause + reset row */
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: .6rem;
+  margin-top: 14px;
+}
+.play-pause-btn {
+  width: 100%;
+  max-width: 95px;
+}
+
+/* SET btn small */
+#setBtn {
+  font-size: .75rem;
+  padding: 6px 12px;
+}
+
+/* dark-mode toggle */
+.theme-toggle {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+
+  background: transparent;
+  box-shadow: none;
+  font-size: 1.35rem;
+
+  padding: 6px;
+  cursor: pointer;
+  opacity: .7;
+}
+.theme-toggle:hover {
+  opacity: 1;
+}
+</style>
+
 </head>
+
 <body>
-    <button class="theme-toggle" id="themeToggle">🌙</button>
-    <div class="timer-container">
-        <div class="display" id="display">00:00</div>
-        <div class="input-group">
-            <input type="number" id="minutesInput" min="0" max="999" value="0" placeholder="00">
-            <span class="input-label">m</span>
-            <input type="number" id="secondsInput" min="0" max="59" value="0" placeholder="00">
-            <span class="input-label">s</span>
-            <button id="setBtn">SET</button>
-        </div>
-        <div class="controls">
-            <button class="play-pause-btn" id="playPauseBtn">START</button>
-            <button id="resetBtn">RESET</button>
-        </div>
-    </div>
 
-    <script>
-        let seconds = 0;
-        let interval = null;
-        let isRunning = false;
+<button class="theme-toggle" id="themeToggle">🌙</button>
 
-        const display = document.getElementById('display');
-        const playPauseBtn = document.getElementById('playPauseBtn');
-        const resetBtn = document.getElementById('resetBtn');
-        const themeToggle = document.getElementById('themeToggle');
-        const minutesInput = document.getElementById('minutesInput');
-        const secondsInput = document.getElementById('secondsInput');
-        const setBtn = document.getElementById('setBtn');
+<div class="timer-container">
+  <div class="display" id="display">00:00</div>
 
-        // Theme toggle
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark');
-            themeToggle.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
-        });
+  <div class="input-group">
+    <input type="number" id="minutesInput" min="0" max="999" value="0">
+    <span class="input-label">m</span>
 
-        function updateDisplay() {
-            const mins = Math.floor(seconds / 60);
-            const secs = seconds % 60;
-            display.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-        }
+    <input type="number" id="secondsInput" min="0" max="59" value="0">
+    <span class="input-label">s</span>
 
-        function updatePlayPauseButton() {
-            if (isRunning) {
-                playPauseBtn.textContent = '⏸';
-                playPauseBtn.classList.add('paused');
-            } else {
-                playPauseBtn.textContent = '▶';
-                playPauseBtn.classList.remove('paused');
-            }
-        }
+    <button id="setBtn">SET</button>
+  </div>
 
-        function start() {
-            if (seconds === 0) return;
-            isRunning = true;
-            updatePlayPauseButton();
-            interval = setInterval(() => {
-                if (seconds > 0) {
-                    seconds--;
-                    updateDisplay();
-                } else {
-                    pause();
-                }
-            }, 1000);
-        }
+  <div class="controls">
+    <button class="play-pause-btn" id="playPauseBtn">▶</button>
+    <button id="resetBtn">RESET</button>
+  </div>
+</div>
 
-        function pause() {
-            isRunning = false;
-            updatePlayPauseButton();
-            if (interval) {
-                clearInterval(interval);
-                interval = null;
-            }
-        }
+<script>
+let seconds = 0;
+let interval = null;
+let isRunning = false;
 
-        function togglePlayPause() {
-            if (isRunning) {
-                pause();
-            } else {
-                start();
-            }
-        }
+const display = document.getElementById('display');
+const playPauseBtn = document.getElementById('playPauseBtn');
+const resetBtn = document.getElementById('resetBtn');
+const themeToggle = document.getElementById('themeToggle');
+const minutesInput = document.getElementById('minutesInput');
+const secondsInput = document.getElementById('secondsInput');
+const setBtn = document.getElementById('setBtn');
 
-        function reset() {
-            pause();
-            seconds = 0;
-            updateDisplay();
-            minutesInput.value = 0;
-            secondsInput.value = 0;
-        }
+// theme
+themeToggle.addEventListener('click', () => {
+  document.body.classList.toggle('dark');
+  themeToggle.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+});
 
-        function setTime() {
-            pause();
-            const mins = parseInt(minutesInput.value) || 0;
-            const secs = parseInt(secondsInput.value) || 0;
-            seconds = (mins * 60) + secs;
-            updateDisplay();
-        }
+// display time
+function updateDisplay() {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  display.textContent = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+}
 
-        playPauseBtn.addEventListener('click', togglePlayPause);
-        resetBtn.addEventListener('click', reset);
-        setBtn.addEventListener('click', setTime);
+// play/pause UI update
+function updatePlayPauseButton() {
+  playPauseBtn.textContent = isRunning ? '⏸' : '▶';
+}
 
-        minutesInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') setTime();
-        });
+// core functions
+function start() {
+  if (seconds === 0) return;
+  isRunning = true;
+  updatePlayPauseButton();
 
-        secondsInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') setTime();
-        });
+  interval = setInterval(() => {
+    if (seconds > 0) {
+      seconds--;
+      updateDisplay();
+    } else {
+      pause();
+    }
+  }, 1000);
+}
 
-        updateDisplay();
-        updatePlayPauseButton();
-    </script>
+function pause() {
+  isRunning = false;
+  updatePlayPauseButton();
+  if (interval) {
+    clearInterval(interval);
+    interval = null;
+  }
+}
+
+function togglePlayPause() {
+  isRunning ? pause() : start();
+}
+
+function reset() {
+  pause();
+  seconds = 0;
+  updateDisplay();
+  minutesInput.value = 0;
+  secondsInput.value = 0;
+}
+
+function setTime() {
+  pause();
+  const mins = parseInt(minutesInput.value) || 0;
+  const secs = parseInt(secondsInput.value) || 0;
+  seconds = (mins * 60) + secs;
+  updateDisplay();
+}
+
+// events
+playPauseBtn.addEventListener('click', togglePlayPause);
+resetBtn.addEventListener('click', reset);
+setBtn.addEventListener('click', setTime);
+
+minutesInput.addEventListener('keypress', e => e.key === 'Enter' && setTime());
+secondsInput.addEventListener('keypress', e => e.key === 'Enter' && setTime());
+
+// init
+updateDisplay();
+updatePlayPauseButton();
+</script>
+
 </body>
 </html>
