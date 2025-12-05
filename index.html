@@ -6,9 +6,9 @@
 <title>Timer</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-  <style>
+<style>
 :root {
   --bg: #fafafa;
   --fg: #1a1a1a;
@@ -53,6 +53,7 @@ body {
   background: var(--bg);
   color: var(--fg);
   font-family: "JetBrains Mono", monospace;
+  font-weight: 400;
   transition: background .25s, color .25s;
 }
 
@@ -90,7 +91,7 @@ body {
 /* Time display */
 .display {
   font-size: 3.2rem;
-  font-weight: 500;
+  font-weight: 700; /* bold */
   font-variant-numeric: tabular-nums;
   margin-bottom: 20px;
 }
@@ -112,6 +113,7 @@ input {
 
   font-size: .9rem;
   text-align: center;
+  font-weight: 400;
 
   border: 2px solid var(--input-border);
   border-radius: 14px;
@@ -132,6 +134,7 @@ input[type=number] {
 
 input:focus {
   border-color: var(--input-focus);
+  border-width: 3px;
 }
 
 .input-label {
