@@ -121,47 +121,8 @@
     const resetBtn = document.getElementById("reset");
     const themeToggle = document.getElementById("themeToggle");
 
-    /* ------------------------  
-       Load Saved State  
-    ------------------------- */
-
-    const savedMinutes = localStorage.getItem("minutes");
-    const savedSeconds = localStorage.getItem("seconds");
-    const savedTheme = localStorage.getItem("theme");
-    const savedStart = localStorage.getItem("timerStart");
-    const savedDuration = localStorage.getItem("timerDuration");
-
-    if (savedTheme === "dark") {
-      document.body.classList.add("dark");
-    }
-
-    if (savedMinutes !== null) {
-      minInput.value = savedMinutes;
-    }
-    if (savedSeconds !== null) {
-      secInput.value = savedSeconds;
-    }
-
-    /* Restore timer using elapsed time */
-    if (savedStart && savedDuration) {
-      const elapsed = Math.floor((Date.now() - Number(savedStart)) / 1000);
-      const remaining = Number(savedDuration) - elapsed;
-
-      if (remaining > 0) {
-        seconds = remaining;
-        isRunning = true;
-        updateDisplay();
-        startTimer();
-      } else {
-        seconds = 0;
-        updateDisplay();
-        localStorage.removeItem("timerStart");
-        localStorage.removeItem("timerDuration");
-      }
-    }
-
-    /* ------------------------  
-       Functions  
+    /* ------------------------
+       Functions
     ------------------------- */
 
     function updateDisplay() {
@@ -222,14 +183,49 @@
       localStorage.removeItem("seconds");
     }
 
-    /* ------------------------  
-       Event Listeners  
+    /* ------------------------
+       Safe Load for Notion
+    ------------------------- */
+
+    window.onload = () => {
+      const savedMinutes = localStorage.getItem("minutes");
+      const savedSeconds = localStorage.getItem("seconds");
+      const savedTheme = localStorage.getItem("theme");
+      const savedStart = localStorage.getItem("timerStart");
+      const savedDuration = localStorage.getItem("timerDuration");
+
+      if (savedTheme === "dark") {
+        document.body.classList.add("dark");
+      }
+
+      if (savedMinutes !== null) minInput.value = savedMinutes;
+      if (savedSeconds !== null) secInput.value = savedSeconds;
+
+      /* Restore timer using elapsed time */
+      if (savedStart && savedDuration) {
+        const elapsed = Math.floor((Date.now() - Number(savedStart)) / 1000);
+        const remaining = Number(savedDuration) - elapsed;
+
+        if (remaining > 0) {
+          seconds = remaining;
+          isRunning = true;
+          updateDisplay();
+          startTimer();
+        } else {
+          seconds = 0;
+          updateDisplay();
+          localStorage.removeItem("timerStart");
+          localStorage.removeItem("timerDuration");
+        }
+      }
+    };
+
+    /* ------------------------
+       Event Listeners
     ------------------------- */
 
     startBtn.addEventListener("click", () => {
-      if (!isRunning) {
-        startTimer();
-      }
+      if (!isRunning) startTimer();
     });
 
     stopBtn.addEventListener("click", stopTimer);
@@ -245,4 +241,5 @@
   </script>
 
 </body>
+
 </html>
